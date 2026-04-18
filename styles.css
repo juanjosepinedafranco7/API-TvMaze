@@ -1,4 +1,3 @@
-/* css/styles.css */
 :root {
     --primary: #2c3e50;
     --accent: #e74c3c;
@@ -44,7 +43,7 @@ header {
     background: #c0392b;
 }
 
-/* Contenedor de resultados */
+
 #results-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -54,7 +53,7 @@ header {
     margin: 0 auto;
 }
 
-/* Estilo de las tarjetas de películas */
+
 .movie-card {
     background: white;
     border-radius: 10px;
