@@ -1,65 +1,65 @@
-import { getShows, searchShows } from './service.js';
-import { state, setShows, setPage, setFilter } from './state.js';
-import { displayShows, updatePaginationUI, renderSearchHistory } from './ui.js';
-import { getFavorites, toggleFavoriteStorage, saveSearchQuery, getSearchHistory } from './storage.js';
+import { obtenerSeries, buscarSeries } from './service.js';
+import { estado, asignarSeries, asignarPagina, asignarFiltro } from './state.js';
+import { dibujarSeries, actualizarInterfazPaginacion, dibujarHistorial } from './ui.js';
+import { obtenerFavoritos, alternarFavorito, guardarBusqueda, obtenerHistorialBusqueda } from './storage.js';
 
-const init = async () => {
-    state.favorites = getFavorites();
-    const history = getSearchHistory();
-    renderSearchHistory(history);
+const iniciarAplicacion = async () => {
+    estado.favoritos = obtenerFavoritos();
+    const historial = obtenerHistorialBusqueda();
+    dibujarHistorial(historial);
 
-    const initialShows = await getShows();
-    setShows(initialShows);
+    const seriesIniciales = await obtenerSeries();
+    asignarSeries(seriesIniciales);
     
-    renderCurrentState();
+    renderizarEstadoActual();
 };
 
-const renderCurrentState = () => {
-    const startIndex = (state.currentPage - 1) * state.itemsPerPage;
-    const endIndex = startIndex + state.itemsPerPage;
-    const showsToDisplay = state.filteredShows.slice(startIndex, endIndex);
+const renderizarEstadoActual = () => {
+    const indiceInicio = (estado.paginaActual - 1) * estado.elementosPorPagina;
+    const indiceFin = indiceInicio + estado.elementosPorPagina;
+    const seriesAMostrar = estado.seriesFiltradas.slice(indiceInicio, indiceFin);
     
-    displayShows(showsToDisplay, 'showsContainer', state.favorites);
-    updatePaginationUI(state.currentPage);
+    dibujarSeries(seriesAMostrar, 'contenedorSeries', estado.favoritos);
+    actualizarInterfazPaginacion(estado.paginaActual);
 };
 
-document.getElementById('searchButton')?.addEventListener('click', async () => {
-    const query = document.getElementById('searchInput').value;
-    if (query) {
-        saveSearchQuery(query);
-        renderSearchHistory(getSearchHistory());
-        const results = await searchShows(query);
-        setShows(results);
-        renderCurrentState();
+document.getElementById('botonBuscar')?.addEventListener('click', async () => {
+    const termino = document.getElementById('entradaBusqueda').value;
+    if (termino) {
+        guardarBusqueda(termino);
+        dibujarHistorial(obtenerHistorialBusqueda());
+        const resultados = await buscarSeries(termino);
+        asignarSeries(resultados);
+        renderizarEstadoActual();
     }
 });
 
-document.getElementById('prevPage')?.addEventListener('click', () => {
-    if (state.currentPage > 1) {
-        setPage(state.currentPage - 1);
-        renderCurrentState();
+document.getElementById('botonAnterior')?.addEventListener('click', () => {
+    if (estado.paginaActual > 1) {
+        asignarPagina(estado.paginaActual - 1);
+        renderizarEstadoActual();
     }
 });
 
-document.getElementById('nextPage')?.addEventListener('click', () => {
-    const totalPages = Math.ceil(state.filteredShows.length / state.itemsPerPage);
-    if (state.currentPage < totalPages) {
-        setPage(state.currentPage + 1);
-        renderCurrentState();
+document.getElementById('botonSiguiente')?.addEventListener('click', () => {
+    const totalPaginas = Math.ceil(estado.seriesFiltradas.length / estado.elementosPorPagina);
+    if (estado.paginaActual < totalPaginas) {
+        asignarPagina(estado.paginaActual + 1);
+        renderizarEstadoActual();
     }
 });
 
-document.getElementById('genreSelect')?.addEventListener('change', (e) => {
-    setFilter(e.target.value);
-    renderCurrentState();
+document.getElementById('selectorGenero')?.addEventListener('change', (evento) => {
+    asignarFiltro(evento.target.value);
+    renderizarEstadoActual();
 });
 
-window.toggleFav = (id) => {
-    const show = state.allShows.find(s => s.id === id) || state.filteredShows.find(s => s.id === id);
-    if (show) {
-        state.favorites = toggleFavoriteStorage(show);
-        renderCurrentState();
+window.alternarFav = (id) => {
+    const serie = estado.todasLasSeries.find(s => s.id === id) || estado.seriesFiltradas.find(s => s.id === id);
+    if (serie) {
+        estado.favoritos = alternarFavorito(serie);
+        renderizarEstadoActual();
     }
 };
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', iniciarAplicacion);
