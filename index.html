@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Explorer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Movie Explorer</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="favorites.html">Mis Favoritos</a>
+        </nav>
+        <div class="search-container">
+            <input type="text" id="entradaBusqueda" placeholder="Buscar serie o película...">
+            <button id="botonBuscar">Buscar</button>
+        </div>
+    </header>
+
+    <main>
+        <aside class="filters-history">
+            <div id="contenedorFiltroGenero">
+                <select id="selectorGenero">
+                    <option value="all">Todos los géneros</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comedy">Comedia</option>
+                    <option value="Action">Acción</option>
+                    <option value="Crime">Crimen</option>
+                </select>
+            </div>
+            <div id="contenedorHistorial">
+                <h3>Búsquedas recientes</h3>
+                <ul id="listaHistorial"></ul>
+            </div>
+        </aside>
+
+        <section class="results-section">
+            <div id="contenedorSeries" class="grid-container"></div>
+            
+            <div id="contenedorPaginacion" class="pagination">
+                <button id="botonAnterior">Anterior</button>
+                <span id="indicadorPaginaActual">Página 1</span>
+                <button id="botonSiguiente">Siguiente</button>
+                
+                <select id="selectorElementosPorPagina">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
